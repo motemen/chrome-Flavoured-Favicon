@@ -2,8 +2,14 @@
 
 console.log('** START **', document.readyState);
 
-var faviconURL = document.querySelector('link[rel$=icon]').getAttribute('href');
+var faviconLinks = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
+var faviconURL = faviconLinks.length === 0
+               ? '//' + location.host + '/favicon.ico'
+               : (<HTMLElement>faviconLinks[0]).getAttribute('href');
 
+console.log(faviconURL);
+
+// TODO
 if (faviconURL.indexOf('data:') === -1) {
     loadImage(faviconURL, function (image) {
         var faviconDataURL = generateOverlainFaviconDataURL(image);
@@ -39,8 +45,7 @@ function generateOverlainFaviconDataURL (image: HTMLImageElement): string {
 }
 
 function replaceFavicon (faviconURL: string) {
-    var existingFaviconLinks = document.querySelectorAll('link[rel$=icon]');
-    for (var i = 0, el; el = existingFaviconLinks[i]; i++) {
+    for (var i = 0, el; el = faviconLinks[i]; i++) {
         el.parentNode.removeChild(el);
     }
 
