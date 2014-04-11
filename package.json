@@ -2,7 +2,6 @@
   "name": "chrome-Flavoured-Favicon",
   "version": "0.0.1",
   "description": "",
-  "main": "gulpfile.js",
   "dependencies": {
     "gulp-typescript": "~0.1.0",
     "gulp": "~3.6.0",
@@ -10,10 +9,8 @@
   },
   "devDependencies": {
     "gulp-tsc": "^0.7.0",
-    "gulp": "^3.6.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "gulp": "^3.6.0",
+    "gulp-changed": "^0.3.0"
   },
   "author": "motemen <motemen@gmail.com>",
   "license": "MIT",
