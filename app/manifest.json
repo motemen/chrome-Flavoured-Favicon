@@ -11,7 +11,6 @@
   "default_locale": "en",
   "background": {
     "scripts": [
-      "js/lib/storage-key.js",
       "js/bg/background.js"
     ],
     "persistent": true

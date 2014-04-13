@@ -10,7 +10,10 @@
   "devDependencies": {
     "gulp-tsc": "^0.7.0",
     "gulp": "^3.6.0",
-    "gulp-changed": "^0.3.0"
+    "gulp-changed": "^0.3.0",
+    "vinyl-source-stream": "^0.1.1",
+    "browserify": "^3.41.0",
+    "event-stream": "^3.1.1"
   },
   "author": "motemen <motemen@gmail.com>",
   "license": "MIT",
