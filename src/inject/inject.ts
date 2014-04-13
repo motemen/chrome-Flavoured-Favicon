@@ -29,17 +29,37 @@ chrome.runtime.sendMessage({}, function (response: any) {
     }
 
     function generateFlavouredFaviconDataURL (image: HTMLImageElement): string {
-        var canvas = document.createElement('canvas');
         var w = image.naturalWidth, h = image.naturalHeight;
-        canvas.width  = w;
-        canvas.height = h;
+
+        function mkCanvas () {
+            var canvas = document.createElement('canvas');
+            canvas.width  = w;
+            canvas.height = h;
+            return canvas;
+        }
+
+        var canvas = mkCanvas(),
+            mask   = mkCanvas();
+
+        var ctxMask = mask.getContext('2d');
+        ctxMask.drawImage(image, 0, 0);
+        ctxMask.globalCompositeOperation = 'source-atop';
+        ctxMask.fillStyle = response.overlay;
+        ctxMask.fillRect(0, 0, w, h);
 
         var context = canvas.getContext('2d');
         context.drawImage(image, 0, 0);
-        context.globalCompositeOperation = 'source-atop';
-        context.globalAlpha = 0.5;
+        // context.globalCompositeOperation = 'source-atop';
+        // context.globalCompositeOperation = 'lighten';
+        context.globalCompositeOperation = 'lighten';
+        /*
+        // context.globalAlpha = 0.5;
         context.fillStyle = response.overlay;
         context.fillRect(0, 0, w, h);
+        */
+        var i = new Image();
+        i.src = ctxMask.canvas.toDataURL();
+        context.drawImage(i, 0, 0);
 
         return canvas.toDataURL();
     }
