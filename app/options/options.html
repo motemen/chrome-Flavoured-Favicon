@@ -2,11 +2,28 @@
 <html>
 <head>
   <title>Flavoured Favicon Options</title>
-  <script src="../js/lib/storage-key.js"></script>
   <script src="../js/options/options.js"></script>
 </head>
 <body>
-  <div><textarea id="rules" style="font-family: monospace"></textarea></div>
+  <div><textarea id="rules" style="font-family: monospace; width: 40em; height: 20em;"></textarea></div>
   <div><button id="save">Save</button></div>
+  <hr>
+  <div>
+JSON format:
+  <pre id="example">
+{
+  <var>hostNamePattern</var>: {
+    "color": <var>color</var>
+  }
+}
+
+<var>hostNamePattern</var> :: ex. "localhost", "*.google.com"
+<var>color</var>           :: ex. "#F00"
+
+ex.
+{
+  "localhost": "#F00"
+}
+  </pre>
 </body>
 </html>

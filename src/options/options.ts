@@ -1,7 +1,7 @@
 import sk = require('../lib/storage-key');
 
 window.onload = function () {
-    var saveButton = document.querySelector('#save'),
+    var saveButton = <HTMLElement>document.querySelector('#save'),
         rulesText  = <HTMLInputElement>document.querySelector('#rules');
 
     var storedRules = new sk.StorageKey('options.rules');
@@ -9,6 +9,8 @@ window.onload = function () {
     rulesText.value = JSON.stringify(storedRules.get() || {}, null, 2);
 
     rulesText.addEventListener('keyup', function (ev: Event) {
+        saveButton.innerText = 'Save';
+
         try {
             JSON.parse(rulesText.value);
             saveButton.removeAttribute('disabled');
@@ -19,5 +21,6 @@ window.onload = function () {
 
     saveButton.addEventListener('click', function (ev: Event) {
         storedRules.set(JSON.parse(rulesText.value));
+        saveButton.innerText = 'Saved!';
     }, true);
 };

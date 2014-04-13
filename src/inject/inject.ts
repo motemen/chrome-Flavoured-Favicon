@@ -8,7 +8,7 @@ var faviconURL = faviconLinks.length === 0
 var absolutizer = document.createElement('a');
     absolutizer.href = faviconURL;
 
-chrome.runtime.sendMessage({ type: 'favicon-data', url: absolutizer.href }, function (response: any) {
+chrome.runtime.sendMessage({ url: absolutizer.href }, function (response: any) {
     for (var i = 0, el; el = faviconLinks[i]; i++) {
         if (el.parentNode) {
             el.parentNode.removeChild(el);
