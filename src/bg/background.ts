@@ -1,7 +1,9 @@
 /// <reference path="../../DefinitelyTyped/chrome/chrome.d.ts" />
 
+import sk = require('../lib/storage-key');
+
 function getConfigFromUrl (url: string) {
-    var storedRules = new StorageKey('options.rules');
+    var storedRules = new sk.StorageKey('options.rules');
     var rules = storedRules.get() || {};
     var hostname = /^\w+:\/\/([^:\/]+)/.exec(url)[1];
 
@@ -25,7 +27,7 @@ chrome.tabs.onUpdated.addListener(
             chrome.tabs.executeScript(tabId, { file: 'js/inject/inject.js' })
         }
 
-        var storedRules = new StorageKey('options.rules');
+        var storedRules = new sk.StorageKey('options.rules');
         var rules = storedRules.get() || {};
         var hostname = /^\w+:\/\/([^:\/]+)/.exec(tab.url)[1];
 

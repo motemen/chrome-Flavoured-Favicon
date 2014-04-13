@@ -1,4 +1,4 @@
-class StorageKey {
+export class StorageKey {
     key: string;
 
     constructor (key: string) {
