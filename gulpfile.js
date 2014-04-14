@@ -5,7 +5,7 @@ var gulp       = require('gulp'),
     source     = require('vinyl-source-stream'),
     es         = require('event-stream');
 
-gulp.task('default', ['browserify', 'watch']);
+gulp.task('default', ['browserify', 'copy', 'watch']);
 
 gulp.task('typescript', function () {
     return gulp.src('src/**/*.ts')
@@ -25,6 +25,11 @@ gulp.task('browserify', ['typescript'], function () {
             }
         )
     );
+});
+
+gulp.task('copy', function () {
+    return gulp.src('bower_components/angular/angular.min.js')
+        .pipe(gulp.dest('app/js/lib'))
 });
 
 gulp.task('watch', function () {

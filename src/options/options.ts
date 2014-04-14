@@ -1,26 +1,46 @@
+/// <reference path="../../DefinitelyTyped/angularjs/angular.d.ts" />
+
 import sk = require('../lib/storage-key');
 
-window.onload = function () {
-    var saveButton = <HTMLElement>document.querySelector('#save'),
-        rulesText  = <HTMLInputElement>document.querySelector('#rules');
+interface OptionsCtrlScope extends ng.IScope {
+    rulesJSON: string;
+    save();
+    state: string;
+    jsonInvalid: boolean;
+}
+
+angular.module('optionsApp', [])
+
+.controller('OptionsCtrl', function ($scope: OptionsCtrlScope) {
+    function getParsedRulesJSON () {
+        try {
+            return JSON.parse($scope.rulesJSON)
+        } catch (e) {
+            return null;
+        }
+    }
 
     var storedRules = new sk.StorageKey('options.rules');
 
-    rulesText.value = JSON.stringify(storedRules.get() || {}, null, 2);
+    $scope.rulesJSON = JSON.stringify(
+        storedRules.get() || {}, null, 2
+    );
 
-    rulesText.addEventListener('keyup', function (ev: Event) {
-        saveButton.innerText = 'Save';
+    $scope.$watch('rulesJSON', function () {
+        $scope.state = 'dirty';
 
-        try {
-            JSON.parse(rulesText.value);
-            saveButton.removeAttribute('disabled');
-        } catch (e) {
-            saveButton.setAttribute('disabled', 'disabled');
+        if (getParsedRulesJSON()) {
+            $scope.jsonInvalid = false;
+        } else {
+            $scope.jsonInvalid = true;
         }
-    }, true)
+    });
 
-    saveButton.addEventListener('click', function (ev: Event) {
-        storedRules.set(JSON.parse(rulesText.value));
-        saveButton.innerText = 'Saved!';
-    }, true);
-};
+    $scope.save = function () {
+        var rules = getParsedRulesJSON();
+        if (rules) {
+            storedRules.set(rules);
+            $scope.state = 'saved';
+        }
+    };
+});

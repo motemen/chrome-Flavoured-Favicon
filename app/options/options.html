@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="optionsApp">
 <head>
   <title>Flavoured Favicon Options</title>
+  <script src="../js/lib/angular.min.js"></script>
   <script src="../js/options/options.js"></script>
 </head>
-<body>
-  <div><textarea id="rules" style="font-family: monospace; width: 40em; height: 20em;"></textarea></div>
-  <div><button id="save">Save</button></div>
+<body ng-controller="OptionsCtrl">
+  <div><textarea id="rules" style="font-family: monospace; width: 40em; height: 20em;" ng-model="rulesJSON"></textarea></div>
+  <div><button id="save" ng-click="save()" ng-disabled="jsonInvalid">{{state==='saved'?'Saved!':'Save'}}</button></div>
   <hr>
   <div>
 JSON format:
@@ -22,7 +23,9 @@ JSON format:
 
 ex.
 {
-  "localhost": "#F00"
+  "localhost": {
+    "color": "#F00"
+  }
 }
   </pre>
 </body>

@@ -1,7 +1,5 @@
 {
   "name": "chrome-Flavoured-Favicon",
-  "version": "0.0.1",
-  "description": "",
   "dependencies": {
     "gulp-typescript": "~0.1.0",
     "gulp": "~3.6.0",
