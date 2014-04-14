@@ -1,3 +1,4 @@
-/node_modules/
 /app/js/
 /src/js/
+/node_modules/
+/bower_components/
