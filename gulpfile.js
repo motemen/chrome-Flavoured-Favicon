@@ -3,7 +3,10 @@ var gulp       = require('gulp'),
     typescript = require('gulp-tsc'),
     browserify = require('browserify'),
     source     = require('vinyl-source-stream'),
-    es         = require('event-stream');
+    es         = require('event-stream'),
+    zip        = require('gulp-zip'),
+    exec       = require('child_process').exec,
+    Q          = require('q');
 
 gulp.task('default', ['browserify', 'copy', 'watch']);
 
@@ -35,3 +38,24 @@ gulp.task('copy', function () {
 gulp.task('watch', function () {
     gulp.watch('src/**/*.ts', [ 'browserify' ])
 });
+
+gulp.task('zip', function (cb) {
+    var q = Q.defer();
+
+    exec('git describe --tags --always --dirty', function (err, stdout, stderr) {
+        if (err) {
+            q.reject(err)
+            return;
+        }
+
+        var tag = stdout.replace(/\n/, '');
+        gulp.src('app/**/*')
+            .pipe(zip('Flavoured-Favicon-' + tag + '.zip'))
+            .pipe(gulp.dest('build'))
+            .on('end', function () {
+                q.resolve();
+            });
+    });
+
+    return q.promise;
+})
