@@ -2,12 +2,7 @@
   "name": "Flavoured Favicon",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "Flavour favicons by its domains",
-  "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
-  },
+  "description": "Change color tastes of favicons by their domains",
   "default_locale": "en",
   "background": {
     "scripts": [
