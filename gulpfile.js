@@ -1,10 +1,11 @@
 var gulp       = require('gulp'),
     changed    = require('gulp-changed'),
     typescript = require('gulp-tsc'),
+    zip        = require('gulp-zip'),
+    editJson   = require('gulp-json-editor'),
     browserify = require('browserify'),
     source     = require('vinyl-source-stream'),
     es         = require('event-stream'),
-    zip        = require('gulp-zip'),
     exec       = require('child_process').exec,
     Q          = require('q');
 
@@ -35,11 +36,7 @@ gulp.task('copy', function () {
         .pipe(gulp.dest('app/js/lib'))
 });
 
-gulp.task('watch', function () {
-    gulp.watch('src/**/*.ts', [ 'browserify' ])
-});
-
-gulp.task('zip', ['browserify'], function (cb) {
+function tag () {
     var q = Q.defer();
 
     exec('git describe --tags --always --dirty', function (err, stdout, stderr) {
@@ -49,13 +46,28 @@ gulp.task('zip', ['browserify'], function (cb) {
         }
 
         var tag = stdout.replace(/\n/, '');
-        gulp.src('app/**/*')
-            .pipe(zip('Flavoured-Favicon-' + tag + '.zip'))
-            .pipe(gulp.dest('build'))
-            .on('end', function () {
-                q.resolve();
-            });
+        q.resolve(tag);
     });
 
     return q.promise;
+}
+
+gulp.task('manifest', function () {
+    return tag().then(function (tag) {
+        return gulp.src('src/manifest.json')
+            .pipe(editJson({ version: tag }))
+            .pipe(gulp.dest('app/'));
+    });
+});
+
+gulp.task('zip', ['manifest', 'browserify', 'copy'], function (cb) {
+    return tag().then(function (tag) {
+        return gulp.src('app/**/*')
+            .pipe(zip('Flavoured-Favicon-' + tag + '.zip'))
+            .pipe(gulp.dest('build'));
+    });
 })
+
+gulp.task('watch', function () {
+    gulp.watch('src/**/*.ts', [ 'browserify' ])
+});

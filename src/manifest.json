@@ -1,6 +1,6 @@
 {
   "name": "Flavoured Favicon",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "manifest_version": 2,
   "description": "Change color tastes of favicons by their domains",
   "default_locale": "en",
