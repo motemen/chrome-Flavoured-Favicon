@@ -14,7 +14,7 @@ gulp.task('typescript', function () {
     return gulp.src('src/**/*.ts')
         .pipe(changed('src/js'))
         .pipe(typescript({ emitError: false }))
-        .pipe(gulp.dest('src/js'))
+        .pipe(gulp.dest('src/js'));
 });
 
 gulp.task('browserify', ['typescript'], function () {
@@ -39,7 +39,7 @@ gulp.task('watch', function () {
     gulp.watch('src/**/*.ts', [ 'browserify' ])
 });
 
-gulp.task('zip', function (cb) {
+gulp.task('zip', ['browserify'], function (cb) {
     var q = Q.defer();
 
     exec('git describe --tags --always --dirty', function (err, stdout, stderr) {
