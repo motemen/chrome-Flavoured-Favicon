@@ -1,4 +1,5 @@
 /app/js/
+/app/manifest.json
 /src/js/
 /node_modules/
 /bower_components/
