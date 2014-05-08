@@ -5,9 +5,12 @@ import sk = require('../lib/storage-key');
 var tabWorking: { [index: number]: boolean } = {};
 
 function getConfigFromUrl (url: string) {
+    var m = /^\w+:\/\/([^:\/]+)/.exec(url);
+    if (!m) return null;
+
+    var hostname = m[1];
     var storedRules = new sk.StorageKey('options.rules');
     var rules = storedRules.get() || {};
-    var hostname = /^\w+:\/\/([^:\/]+)/.exec(url)[1];
 
     for (var p in rules) {
         var regexp = new RegExp('^' + p.replace(/\*/g, '.+?') + '$');
