@@ -60,7 +60,9 @@ gulp.task('manifest', function () {
     });
 });
 
-gulp.task('zip', ['manifest', 'browserify', 'copy'], function (cb) {
+gulp.task('build', ['manifest', 'browserify', 'copy']);
+
+gulp.task('zip', ['build'], function (cb) {
     return tag().then(function (tag) {
         return gulp.src('app/**/*')
             .pipe(zip('Flavoured-Favicon-' + tag + '.zip'))
