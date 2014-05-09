@@ -9,7 +9,7 @@ var gulp       = require('gulp'),
     exec       = require('child_process').exec,
     Q          = require('q');
 
-gulp.task('default', ['browserify', 'copy', 'watch']);
+gulp.task('default', ['build']);
 
 gulp.task('typescript', function () {
     return gulp.src('src/**/*.ts')
@@ -36,10 +36,10 @@ gulp.task('copy', function () {
         .pipe(gulp.dest('app/js/lib'))
 });
 
-function tag () {
+function tag (options) {
     var q = Q.defer();
 
-    exec('git describe --tags --always --dirty', function (err, stdout, stderr) {
+    exec('git describe --tags --always ' + (options || ''), function (err, stdout, stderr) {
         if (err) {
             q.reject(err)
             return;
@@ -55,7 +55,7 @@ function tag () {
 gulp.task('manifest', function () {
     return tag().then(function (tag) {
         return gulp.src('src/manifest.json')
-            .pipe(editJson({ version: tag }))
+            .pipe(editJson({ version: tag.replace(/-(\d+)-.*/g, '.$1') }))
             .pipe(gulp.dest('app/'));
     });
 });
@@ -63,7 +63,7 @@ gulp.task('manifest', function () {
 gulp.task('build', ['manifest', 'browserify', 'copy']);
 
 gulp.task('zip', ['build'], function (cb) {
-    return tag().then(function (tag) {
+    return tag('--dirty').then(function (tag) {
         return gulp.src('app/**/*')
             .pipe(zip('Flavoured-Favicon-' + tag + '.zip'))
             .pipe(gulp.dest('build'));
@@ -71,5 +71,5 @@ gulp.task('zip', ['build'], function (cb) {
 })
 
 gulp.task('watch', function () {
-    gulp.watch('src/**/*.ts', [ 'browserify' ])
+    gulp.watch('src/**/*.ts', ['browserify'])
 });
