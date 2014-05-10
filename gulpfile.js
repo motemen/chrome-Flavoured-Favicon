@@ -36,10 +36,10 @@ gulp.task('copy', function () {
         .pipe(gulp.dest('app/js/lib'))
 });
 
-function tag (options) {
+function tag () {
     var q = Q.defer();
 
-    exec('git describe --tags --always ' + (options || ''), function (err, stdout, stderr) {
+    exec('git describe --tags --always --dirty', function (err, stdout, stderr) {
         if (err) {
             q.reject(err)
             return;
@@ -52,10 +52,20 @@ function tag (options) {
     return q.promise;
 }
 
-gulp.task('manifest', function () {
+function version () {
     return tag().then(function (tag) {
+        return tag.replace(/^(\d+\.\d+)(?:-(\d+))?/, function (_, majorMinor, patch) {
+                return majorMinor + '.' + (patch || '0');
+            })
+            .replace(/-g[0-9a-f]+/, '')
+            .replace(/-dirty/, '.1');
+    });
+}
+
+gulp.task('manifest', function () {
+    return version().then(function (version) {
         return gulp.src('src/manifest.json')
-            .pipe(editJson({ version: tag.replace(/-(\d+)-.*/g, '.$1') }))
+            .pipe(editJson({ version: version }))
             .pipe(gulp.dest('app/'));
     });
 });
@@ -63,9 +73,9 @@ gulp.task('manifest', function () {
 gulp.task('build', ['manifest', 'browserify', 'copy']);
 
 gulp.task('zip', ['build'], function (cb) {
-    return tag('--dirty').then(function (tag) {
+    return version().then(function (version) {
         return gulp.src('app/**/*')
-            .pipe(zip('Flavoured-Favicon-' + tag + '.zip'))
+            .pipe(zip('Flavoured-Favicon-' + version + '.zip'))
             .pipe(gulp.dest('build'));
     });
 })
