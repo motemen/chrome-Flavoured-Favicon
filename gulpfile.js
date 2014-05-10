@@ -54,11 +54,9 @@ function tag () {
 
 function version () {
     return tag().then(function (tag) {
-        return tag.replace(/^(\d+\.\d+)(?:-(\d+))?/, function (_, majorMinor, patch) {
-                return majorMinor + '.' + (patch || '0');
-            })
+        return tag.replace(/-(\d+)/, '.$1')
             .replace(/-g[0-9a-f]+/, '')
-            .replace(/-dirty/, '.1');
+            .replace(/-dirty/, '');
     });
 }
 
