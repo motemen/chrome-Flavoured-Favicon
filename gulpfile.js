@@ -13,7 +13,7 @@ gulp.task('default', ['build']);
 
 gulp.task('typescript', function () {
     return gulp.src('src/**/*.ts')
-        .pipe(changed('src/js'))
+        .pipe(changed('src/js', { extension: '.js' }))
         .pipe(typescript({ emitError: false }))
         .pipe(gulp.dest('src/js'));
 });
